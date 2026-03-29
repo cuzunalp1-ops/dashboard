@@ -120,7 +120,6 @@
       text-transform:uppercase;
     }
 
-    /* 🔥 fallback mesaj */
     #fallback{
       display:none;
       position:absolute;
@@ -164,13 +163,12 @@
 
 <div class="frame-wrap">
   <iframe id="dash"
-    window.open('https://script.google.com/macros/s/AKfycbzbNjnkNN0g2bWVQcuxZpvVuockS5Ua-GX61DAulCkQ-bdxcUTrIy20cbduC_K3G5Qkig/exec','_blank')>
+    src="https://script.google.com/macros/s/AKfycbwZy7MOOWBjpp5hd2NiPJBDrELJ9iihRIiWaXilNqkxe3zNNTH9ggvq9zbA5XvDmHJtZw/exec">
   </iframe>
 
-  <!-- 🔥 fallback -->
   <div id="fallback">
     <div>Panel yüklenemedi</div>
-    <button onclick="window.open('https://script.google.com/macros/s/AKfycbzbNjnkNN0g2bWVQcuxZpvVuockS5Ua-GX61DAulCkQ-bdxcUTrIy20cbduC_K3G5Qkig/exec','_blank')">
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbwZy7MOOWBjpp5hd2NiPJBDrELJ9iihRIiWaXilNqkxe3zNNTH9ggvq9zbA5XvDmHJtZw/exec','_blank')">
       Direkt Aç
     </button>
   </div>
@@ -181,12 +179,10 @@
   const loader = document.getElementById("loader");
   const fallback = document.getElementById("fallback");
 
-  // iframe yüklenirse loader kapanır
   iframe.onload = () => {
     loader.classList.add("hidden");
   };
 
-  // 🔥 6 saniye içinde yüklenmezse fallback göster
   setTimeout(() => {
     if (!loader.classList.contains("hidden")) {
       fallback.style.display = "flex";
