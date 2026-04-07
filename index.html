@@ -42,7 +42,6 @@
       overflow:hidden;
     }
 
-    /* iOS safe area support */
     @supports(padding: env(safe-area-inset-top)) {
       nav { padding-top: env(safe-area-inset-top); }
       .frame-wrap { bottom: env(safe-area-inset-bottom); }
@@ -162,7 +161,6 @@
       border-radius:6px;
     }
 
-    /* PWA Install Banner */
     #pwa-install{
       display:none;
       position:fixed;
@@ -213,10 +211,7 @@
 </div>
 
 <div class="frame-wrap">
-  <iframe id="dash"
-    src=""
-    allow="clipboard-write">
-  </iframe>
+  <iframe id="dash" src="" allow="clipboard-write"></iframe>
 
   <div id="fallback">
     <div>Panel yüklenemedi</div>
@@ -226,22 +221,27 @@
   </div>
 </div>
 
-<!-- PWA Install Banner -->
 <div id="pwa-install">
   📲 Uygulamayı Yükle
   <button class="close-btn" onclick="event.stopPropagation();document.getElementById('pwa-install').style.display='none';localStorage.setItem('pwa-dismissed','1')">✕</button>
 </div>
 
 <script>
-  // Iframe loader
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwZy7MOOWBjpp5hd2NiPJBDrELJ9iihRIiWaXilNqkxe3zNNTH9ggvq9zbA5XvDmHJtZw/exec";
+
   const iframe = document.getElementById("dash");
   const loader = document.getElementById("loader");
   const fallback = document.getElementById("fallback");
 
+  // Önce onload dinleyicisini bağla
   iframe.onload = () => {
     loader.classList.add("hidden");
   };
 
+  // Cache-buster ile her zaman güncel kodu yükle
+  iframe.src = GAS_URL + "?v=" + Date.now();
+
+  // 8 saniye içinde yüklenmezse fallback göster
   setTimeout(() => {
     if (!loader.classList.contains("hidden")) {
       fallback.style.display = "flex";
@@ -249,7 +249,7 @@
     }
   }, 8000);
 
-  // PWA Service Worker Registration
+  // PWA Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
       .then(reg => console.log('SW registered:', reg.scope))
@@ -263,7 +263,6 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    // Show banner if not dismissed
     if (!localStorage.getItem('pwa-dismissed')) {
       installBanner.style.display = 'flex';
     }
