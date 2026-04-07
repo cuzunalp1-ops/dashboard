@@ -1,7 +1,5 @@
-const CACHE_NAME = 'evofone-v2';
+const CACHE_NAME = 'evofone-v3';
 const SHELL_ASSETS = [
-  '/',
-  '/index.html',
   '/evo-logo.webp',
   '/favicon.svg',
   '/android-chrome-192x192.png',
@@ -27,9 +25,21 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
+
+  // Google/GAS isteklerini cache'leme
   if (url.hostname.includes('google') || url.hostname.includes('googleapis')) {
     return;
   }
+
+  // index.html her zaman network'ten al (cache-bust zaten var)
+  if (url.pathname === '/' || url.pathname === '/index.html') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Diğer statik dosyalar: network-first
   event.respondWith(
     fetch(event.request)
       .then(response => {
